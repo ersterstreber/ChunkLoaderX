@@ -11,15 +11,13 @@ import java.util.List;
 import java.util.Map;
 import java.util.logging.Level;
 
-import net.milkbowl.vault.economy.Economy;
-
 import org.bukkit.Bukkit;
 import org.bukkit.Chunk;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.RegisteredServiceProvider;
 import org.bukkit.plugin.java.JavaPlugin;
-import org.mcstats.Metrics;
+import org.bukkit.scheduler.BukkitRunnable;
 
 import de.ersterstreber.chunkloaderx.commands.KMCCommand;
 import de.ersterstreber.chunkloaderx.config.Config;
@@ -29,6 +27,7 @@ import de.ersterstreber.chunkloaderx.listeners.BlockPlaceListener;
 import de.ersterstreber.chunkloaderx.listeners.ChunkUnloadListener;
 import de.ersterstreber.chunkloaderx.listeners.ExplosionListener;
 import de.ersterstreber.chunkloaderx.listeners.PlayerInteractListener;
+import net.milkbowl.vault.economy.Economy;
 
 public class Main extends JavaPlugin {
 
@@ -69,20 +68,7 @@ public class Main extends JavaPlugin {
 		
 		registerListeners();
 		
-		setupMetrics();
-		
 		getCommand("chunkloader").setExecutor(new KMCCommand());
-	}
-	
-	private void setupMetrics() {
-	    try {
-	        Metrics metrics = new Metrics(this);
-	        metrics.start();
-	        getLogger().info("Connected to MCStats.");
-	    } catch (IOException e) {
-	        getLogger().severe("Couldn't start Metrics-service.");
-	        return;
-	    }
 	}
 	
 	private void registerListeners() {
@@ -178,14 +164,19 @@ public class Main extends JavaPlugin {
 	}
 
     private void setupEconomy() {
+    	try {
         RegisteredServiceProvider<Economy> economyProvider = getServer().getServicesManager().getRegistration(net.milkbowl.vault.economy.Economy.class);
-        if (economyProvider != null) {
-            economy = economyProvider.getProvider();
-            usingVault = true;
-        } else {
-        	getLogger().warning("There is no Vault-supported economy-plugin installed, you won't be able to use the economy feature!");
-        	usingVault = false;
-        }
+        	if (economyProvider != null) {
+        		economy = economyProvider.getProvider();
+        		usingVault = true;
+        	} else {
+        		getLogger().warning("There is no Vault-supported economy-plugin installed, you won't be able to use the economy feature!");
+        		usingVault = false;
+        	}
+    	} catch (NoClassDefFoundError e) {
+    		getLogger().warning("There is no Vault-supported economy-plugin installed, you won't be able to use the economy feature!");
+    		usingVault = false;
+    	}
     }
     
     public boolean usingVault() {

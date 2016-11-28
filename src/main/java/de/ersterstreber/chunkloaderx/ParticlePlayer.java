@@ -1,12 +1,12 @@
 package de.ersterstreber.chunkloaderx;
 
-import net.minecraft.server.v1_9_R1.EnumParticle;
-import net.minecraft.server.v1_9_R1.PacketPlayOutWorldParticles;
-
 import org.bukkit.Chunk;
-import org.bukkit.craftbukkit.v1_9_R1.entity.CraftPlayer;
+import org.bukkit.craftbukkit.v1_11_R1.entity.CraftPlayer;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
+
+import net.minecraft.server.v1_11_R1.EnumParticle;
+import net.minecraft.server.v1_11_R1.PacketPlayOutWorldParticles;
 
 public class ParticlePlayer {
 

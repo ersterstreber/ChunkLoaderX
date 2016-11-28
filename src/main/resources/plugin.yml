@@ -1,6 +1,6 @@
 name: ChunkLoaderX
 main: de.ersterstreber.chunkloaderx.Main
-version: 0.3
+version: 0.5
 author: ersterstreber
 commands:
     chunkloader:
